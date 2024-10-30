@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Equações</title>
+    
+    <script>
+        function calcularX() {
+            const a = parseFloat(document.getElementById('valorA').value); //input de numeros
+            const b = parseFloat(document.getElementById('valorB').value); //input de numeros
+            const c = parseFloat(document.getElementById('valorC').value); //input de numeros
+            const d = parseFloat(document.getElementById('valorD') ? document.getElementById('valorD').value : 0); //input de numeros = 0
+            const operador1 = document.getElementById('operador1').value; //operações
+            const operador2 = document.getElementById('operador2') ? document.getElementById('operador2').value : null; //operações
+            let x;
+
+            const equationType = document.getElementById('equationType').value;
+            
+            //operação de 1 grau
+            if (equationType === 'linear') {
+                let y;
+
+                if (operador1 === '+') {
+                    y = c - b;
+                } else if (operador1 === '-') {
+                    y = c + b;
+                } else if (operador1 === '*') {
+                    y = c / b;
+                } else if (operador1 === '/') {
+                    y = c * b; 
+                }
+                x = y / a;
+            
+            // operação de 2 grau -- AJUSTAR
+            } else if (equationType === 'quadratic') {
+                
+                const discriminante = Math.pow(b, 2) - 4 * a * (c - d);  //Math.pow retorna um número especificado elevado à potência especificada
+                
+                if (discriminante < 0) {
+                    document.getElementById('resultado').innerText = 'Não há raízes reais.';
+                    return;
+                }
+
+                const raiz1 = (-b + Math.sqrt(discriminante)) / (2 * a); //Math. sqrt retorna a raiz quadrada de um número
+                const raiz2 = (-b - Math.sqrt(discriminante)) / (2 * a);
+                x = `x1: ${raiz1}, x2: ${raiz2}`;
+            }
+            document.getElementById('resultado').innerText = x;
+        }
+
+        // AJUSTAR PARA ATUALIZAÇÃO DE TEXTO
+        function atualizarTitulo() {
+            const equationType = document.getElementById('equationType').value;
+            const titulo = equationType === 'linear' ? 'Equação: AX + B = C' : 'Equação: AX² + BX + C = D';
+            document.getElementById('tituloEditable').innerText = titulo;
+        }
+
+        // AJUSTAR PARA ATUALIZAÇÃO DE TEXTO
+        function mostrarCampos() {
+            const equationType = document.getElementById('equationType').value;
+            document.getElementById('linearFields').style.display = equationType === 'linear' ? 'block' : 'none';
+            document.getElementById('quadraticFields').style.display = equationType === 'quadratic' ? 'block' : 'none';
+            atualizarTitulo();
+        }
+    </script>
+</head>
+   
+<body>
+
+    <h1>Calculadora de Equações</h1>
+
+    <label for="equationType">Escolha a equação:</label>
+    <select id="equationType" onchange="mostrarCampos()">
+        <option value="linear">Equação do 1º grau (AX + B = C)</option>
+        <option value="quadratic">Equação do 2º grau (AX² + BX + C = D)</option>
+    </select>
+    <br>
+
+    <h1>
+        Monte sua Equação: <span id="tituloEditable">AX + B = C</span>
+    </h1>
+
+    <div id="linearFields"> <!--Caixa da primeira operação-->
+        <label for="valorA">Dê o valor de A:</label>
+        <input type="number" id="valorA" oninput="atualizarTitulo()">
+        <br><br>
+    
+        <label for="valorB">Dê o valor de B:</label>
+        <input type="number" id="valorB" oninput="atualizarTitulo()" step="any">
+        <br><br>
+
+        <label for="operador1">Dê o operador Matemático entre "AX" e "B":</label>
+        <select id="operador1" oninput="atualizarTitulo()">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        <br><br>
+
+        <label for="valorC">Dê o valor de C:</label>
+        <input type="number" id="valorC" oninput="atualizarTitulo()" step="any">
+        <br><br>
+    </div>
+
+    <div id="quadraticFields" style="display: none;"> <!--Caixa da segunda operação-->
+        <label for="valorA">Dê o valor de A:</label>
+        <input type="number" id="valorA" oninput="atualizarTitulo()">
+        <br><br>
+
+        <label for="operador2">Dê o operador Matemático entre "AX" e "BX":</label>
+        <select id="operador2" oninput="atualizarTitulo()">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        <br><br>
+    
+        <label for="valorB">Dê o valor de B:</label>
+        <input type="number" id="valorB" oninput="atualizarTitulo()" step="any">
+        <br><br>
+
+        <label for="operador2">Dê o operador Matemático entre "BX" e "C":</label>
+        <select id="operador2" oninput="atualizarTitulo()">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+        </select>
+        <br><br>
+
+        <label for="valorC">Dê o valor de C:</label>
+        <input type="number" id="valorC" oninput="atualizarTitulo()" step="any">
+        <br><br>
+
+        <label for="valorD">Dê o valor de D:</label>
+        <input type="number" id="valorD" oninput="atualizarTitulo()" step="any">
+        <br><br>
+    </div>
+
+    <button onclick="calcularX()">Calcular x</button>
+    <br><br>
+
+    <h2 id="resultado"></h2>
+</body>
+</html>
